@@ -122,6 +122,4 @@ README.md
 
 ---
 
-## 📄 License
 
-MIT — free to use and modify.
