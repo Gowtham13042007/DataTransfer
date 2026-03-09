@@ -1,178 +1,127 @@
-<p align="center">
-    <img src="https://raw.githubusercontent.com/PKief/vscode-material-icon-theme/ec559a9f6bfd399b82bb44393651661b08aaf7ba/icons/folder-markdown-open.svg" align="center" width="30%">
-</p>
-<p align="center"><h1 align="center">DATATRANSFER.GIT</h1></p>
-<p align="center">
-	<em><code>❯ REPLACE-ME</code></em>
-</p>
-<p align="center">
-	<img src="https://img.shields.io/github/license/Gowtham13042007/DataTransfer.git?style=default&logo=opensourceinitiative&logoColor=white&color=0080ff" alt="license">
-	<img src="https://img.shields.io/github/last-commit/Gowtham13042007/DataTransfer.git?style=default&logo=git&logoColor=white&color=0080ff" alt="last-commit">
-	<img src="https://img.shields.io/github/languages/top/Gowtham13042007/DataTransfer.git?style=default&color=0080ff" alt="repo-top-language">
-	<img src="https://img.shields.io/github/languages/count/Gowtham13042007/DataTransfer.git?style=default&color=0080ff" alt="repo-language-count">
-</p>
-<p align="center"><!-- default option, no dependency badges. -->
-</p>
-<p align="center">
-	<!-- default option, no dependency badges. -->
-</p>
-<br>
+# 🚁 Drone Data Commander
 
-##  Table of Contents
-
-- [ Overview](#-overview)
-- [ Features](#-features)
-- [ Project Structure](#-project-structure)
-  - [ Project Index](#-project-index)
-- [ Getting Started](#-getting-started)
-  - [ Prerequisites](#-prerequisites)
-  - [ Installation](#-installation)
-  - [ Usage](#-usage)
-  - [ Testing](#-testing)
-- [ Project Roadmap](#-project-roadmap)
-- [ Contributing](#-contributing)
-- [ License](#-license)
-- [ Acknowledgments](#-acknowledgments)
+A desktop GUI application for managing and downloading files from a **NVIDIA Jetson** device over SSH/rsync — built with Python and Tkinter.
 
 ---
 
-##  Overview
+## 📸 Features
 
-<code>❯ REPLACE-ME</code>
+- **Connection Check** — Ping the Jetson device to verify network reachability
+- **Remote File Listing** — Browse files on the Jetson over SSH
+- **Smart File Download** — Transfer files via `rsync` with real-time dual progress bars
+- **Per-file Progress** — See the current file name, transfer percentage, and speed
+- **Overall Progress** — Track how many files have been transferred out of the total
+- **Thread-safe UI** — All SSH/rsync operations run in background threads — the UI never freezes
 
 ---
 
-##  Features
+## 🖥️ Requirements
 
-<code>❯ REPLACE-ME</code>
+### System
+- Python 3.7+
+- Linux / macOS (Windows untested)
+- `rsync` ≥ 3.1.0 (required for `--info=progress2`)
+- `ssh` with key-based authentication configured to the Jetson
+
+### Python (stdlib only — no pip installs needed)
+| Module | Use |
+|--------|-----|
+| `tkinter` | GUI framework |
+| `subprocess` | Run SSH / rsync / ping |
+| `threading` | Background workers |
+| `re` | Parse rsync progress output |
 
 ---
 
-##  Project Structure
+## ⚙️ Configuration
 
-```sh
-└── DataTransfer.git/
-    ├── README.md
-    └── transfer.py
+Edit the constants at the top of `drone_app.py`:
+
+```python
+JETSON_USER = "your_username"          # SSH username on the Jetson
+JETSON_IP   = "172.28.59.187"          # IP address of the Jetson device
+JETSON_DIR  = "/home/your_username"    # Remote directory to download from
+LOCAL_DIR   = "/home/you/ascend_data/" # Local destination directory
 ```
 
-
-###  Project Index
-<details open>
-	<summary><b><code>DATATRANSFER.GIT/</code></b></summary>
-	<details> <!-- __root__ Submodule -->
-		<summary><b>__root__</b></summary>
-		<blockquote>
-			<table>
-			<tr>
-				<td><b><a href='https://github.com/Gowtham13042007/DataTransfer.git/blob/master/transfer.py'>transfer.py</a></b></td>
-				<td><code>❯ REPLACE-ME</code></td>
-			</tr>
-			</table>
-		</blockquote>
-	</details>
-</details>
-
 ---
-##  Getting Started
 
-###  Prerequisites
+## 🔐 SSH Key Setup
 
-Before getting started with DataTransfer.git, ensure your runtime environment meets the following requirements:
+The app uses passwordless SSH. Set it up once:
 
-- **Programming Language:** Python
+```bash
+# Generate a key pair (skip if you already have one)
+ssh-keygen -t ed25519 -C "drone-app"
 
+# Copy your public key to the Jetson
+ssh-copy-id your_username@172.28.59.187
 
-###  Installation
-
-Install DataTransfer.git using one of the following methods:
-
-**Build from source:**
-
-1. Clone the DataTransfer.git repository:
-```sh
-❯ git clone https://github.com/Gowtham13042007/DataTransfer.git
+# Verify it works without a password prompt
+ssh your_username@172.28.59.187 "echo OK"
 ```
 
-2. Navigate to the project directory:
-```sh
-❯ cd DataTransfer.git
+---
+
+## 🚀 Usage
+
+```bash
+python drone_app.py
 ```
 
-3. Install the project dependencies:
+### Button Reference
 
-echo 'INSERT-INSTALL-COMMAND-HERE'
-
-
-
-###  Usage
-Run DataTransfer.git using the following command:
-echo 'INSERT-RUN-COMMAND-HERE'
-
-###  Testing
-Run the test suite using the following command:
-echo 'INSERT-TEST-COMMAND-HERE'
-
----
-##  Project Roadmap
-
-- [X] **`Task 1`**: <strike>Implement feature one.</strike>
-- [ ] **`Task 2`**: Implement feature two.
-- [ ] **`Task 3`**: Implement feature three.
+| Button | Action |
+|--------|--------|
+| **Check Connection** | Pings the Jetson and reports online/offline |
+| **List Files** | SSH into Jetson and lists files in `JETSON_DIR` |
+| **Download All** | Dry-runs rsync to count files, then transfers all |
 
 ---
 
-##  Contributing
+## 📊 Progress Bars Explained
 
-- **💬 [Join the Discussions](https://github.com/Gowtham13042007/DataTransfer.git/discussions)**: Share your insights, provide feedback, or ask questions.
-- **🐛 [Report Issues](https://github.com/Gowtham13042007/DataTransfer.git/issues)**: Submit bugs found or log feature requests for the `DataTransfer.git` project.
-- **💡 [Submit Pull Requests](https://github.com/Gowtham13042007/DataTransfer.git/blob/main/CONTRIBUTING.md)**: Review open PRs, and submit your own PRs.
+```
+Overall Progress  ████████████░░░░  45.0%    ← files transferred / total files
+Current File      ██████████████░░  87%  10.25MB/s  ← active file transfer
+```
 
-<details closed>
-<summary>Contributing Guidelines</summary>
-
-1. **Fork the Repository**: Start by forking the project repository to your github account.
-2. **Clone Locally**: Clone the forked repository to your local machine using a git client.
-   ```sh
-   git clone https://github.com/Gowtham13042007/DataTransfer.git
-   ```
-3. **Create a New Branch**: Always work on a new branch, giving it a descriptive name.
-   ```sh
-   git checkout -b new-feature-x
-   ```
-4. **Make Your Changes**: Develop and test your changes locally.
-5. **Commit Your Changes**: Commit with a clear message describing your updates.
-   ```sh
-   git commit -m 'Implemented new feature x.'
-   ```
-6. **Push to github**: Push the changes to your forked repository.
-   ```sh
-   git push origin new-feature-x
-   ```
-7. **Submit a Pull Request**: Create a PR against the original project repository. Clearly describe the changes and their motivations.
-8. **Review**: Once your PR is reviewed and approved, it will be merged into the main branch. Congratulations on your contribution!
-</details>
-
-<details closed>
-<summary>Contributor Graph</summary>
-<br>
-<p align="left">
-   <a href="https://github.com{/Gowtham13042007/DataTransfer.git/}graphs/contributors">
-      <img src="https://contrib.rocks/image?repo=Gowtham13042007/DataTransfer.git">
-   </a>
-</p>
-</details>
+- **Overall** is driven by rsync's `xfr#N / total` counters
+- **Per-file** is driven by rsync's `--info=progress2` percentage
+- A dry-run (`--dry-run --stats`) first counts exactly how many files will transfer
 
 ---
 
-##  License
+## 🗂️ Project Structure
 
-This project is protected under the [SELECT-A-LICENSE](https://choosealicense.com/licenses) License. For more details, refer to the [LICENSE](https://choosealicense.com/licenses/) file.
+```
+drone_app.py   # Single-file application — all logic and UI in one place
+README.md
+```
+
+---
+
+## 🛠️ Troubleshooting
+
+| Symptom | Fix |
+|---------|-----|
+| `CRITICAL: Jetson is offline` | Check IP, cable, or Wi-Fi. Verify with `ping 172.28.59.187` |
+| SSH password prompt appears | SSH key not installed — see SSH Key Setup above |
+| Progress bar stuck at 0% | Ensure rsync ≥ 3.1.0: `rsync --version` |
+| `Transfer failed (exit code 255)` | SSH connection dropped mid-transfer — retry |
+| Empty file list | Check `JETSON_DIR` path is correct and accessible |
+| Tkinter not found | Install with `sudo apt install python3-tk` |
 
 ---
 
-##  Acknowledgments
+## 📝 Notes
 
-- List any resources, contributors, inspiration, etc. here.
+- The app uses `rsync -az --no-inc-recursive --info=progress2,name` for accurate progress tracking
+- Transfers are **incremental** — re-running Download All only copies new or changed files
+- The status log auto-scrolls and shows all activity including filenames and errors
 
 ---
+
+## 📄 License
+
+MIT — free to use and modify.
